@@ -1,3 +1,4 @@
+
 package utils
 
 import (
@@ -78,6 +79,7 @@ func CalculateFare(speed float64, prevTimeStamp, currentTimeStamp time.Time) flo
 
 }
 
+/*
 func WriteToCSV(inputMap map[int]float64) {
 	file, err := os.Create("output.csv")
 	if err != nil {
@@ -99,4 +101,29 @@ func WriteToCSV(inputMap map[int]float64) {
 			log.Fatalln("Error writing record to CSV: ", err)
 		}
 	}
+}
+*/
+
+func WriteToCSV(inputMap map[int]float64) {  
+	file, err := os.Create("output.csv")  
+	if err != nil {  
+		log.Fatal("Failed to create file:", err)  
+	}  
+	defer file.Close()  
+
+	writer := csv.NewWriter(file)  
+	defer writer.Flush()  
+
+	if err := writer.Write([]string{"id_delivery", "fare_estimate"}); err != nil {  
+		log.Fatalln("Error writing header to CSV:", err)  
+	}  
+
+	for key, value := range inputMap {  
+		if err := writer.Write([]string{  
+			strconv.FormatInt(int64(key), 10),  
+			strconv.FormatFloat(value, 'f', -1, 64),  
+		}); err != nil {  
+			log.Fatalln("Error writing record to CSV:", err)  
+		}  
+	}  
 }

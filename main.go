@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"snappbox_challenge/models"
 	"snappbox_challenge/utils"
+	"time"
 )
 
 func main() {
+	var t time.Time = time.Now()
 
 	pointsCollection := make(map[int][]models.Point)
 
@@ -17,4 +20,6 @@ func main() {
 
 	utils.WriteToCSV(totalFares)
 
+	var t2 time.Time = time.Now()
+	fmt.Println(t2.Sub(t).Seconds())
 }

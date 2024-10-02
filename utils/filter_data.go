@@ -1,49 +1,44 @@
-package utils
+package utils  
 
-import (
-	"snappbox_challenge/models"
-)
+import (  
+	"sync"  
+	"snappbox_challenge/models"  
+)  
 
-func filterEachList(listOfPoints []models.Point, id int, validCollection *map[int][]models.Point, doneChan chan bool) {
-	for j := 1; j < len(listOfPoints); j++ {
-		prev := listOfPoints[j-1]
-		current := listOfPoints[j]
-		distance := CalculateHaversineDistance(&prev, &current)
+func filterEachList(listOfPoints []models.Point, id int, validCollection map[int][]models.Point, mu *sync.Mutex) {  
+	for j := 1; j < len(listOfPoints); j++ {  
+		prev := listOfPoints[j-1]  
+		current := listOfPoints[j]  
+		distance := CalculateHaversineDistance(&prev, &current)  
 
-		timeDiff := current.GetTimeStamp().Sub(prev.GetTimeStamp()).Hours()
+		timeDiff := current.GetTimeStamp().Sub(prev.GetTimeStamp()).Hours()  
 
-		speed := CalculateSpeed(distance, timeDiff)
+		speed := CalculateSpeed(distance, timeDiff)  
 
-		if speed <= 100 {
-			CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp())
-			(*validCollection)[id] = append((*validCollection)[id], current)
-		}
-	}
-	doneChan <- true
+		if speed <= 100 {  
+			CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp())  
+			mu.Lock()  
+			validCollection[id] = append(validCollection[id], current)  
+			mu.Unlock()  
+		}  
+	}  
+}  
 
-}
+func FilterData(pointsCollection *map[int][]models.Point) map[int][]models.Point {  
+	validCollection := make(map[int][]models.Point)  
+	var mu sync.Mutex  
+	var wg sync.WaitGroup  
 
-func FilterData(pointsCollection *map[int][]models.Point) map[int][]models.Point {
-	validCollection := make(map[int][]models.Point)
+	for id, listOfPoints := range *pointsCollection {  
+		wg.Add(1)  
+		validCollection[id] = append(validCollection[id], listOfPoints[0])  
 
-	var i int = 0
+		go func(listOfPoints []models.Point, id int) {  
+			defer wg.Done()  
+			filterEachList(listOfPoints, id, validCollection, &mu)  
+		}(listOfPoints, id)  
+	}  
 
-	doneChans := make([]chan bool, len(*pointsCollection))
-
-	for id, listOfPoints := range *pointsCollection {
-
-		doneChans[i] = make(chan bool)
-
-		validCollection[id] = append(validCollection[id], listOfPoints[0])
-
-		go filterEachList(listOfPoints, id, &validCollection, doneChans[i])
-
-		<-doneChans[i]
-		close(doneChans[i])
-
-		i++
-	}
-
-	return validCollection
-
+	wg.Wait()  
+	return validCollection  
 }
