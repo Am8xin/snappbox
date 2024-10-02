@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"snappbox_challenge/models"
 )
@@ -24,29 +25,30 @@ func DataReader(csvFilePath string) []models.Point {
 
 	records, err := csvReader.ReadAll()
 	if err != nil {
-		log.Fatal("Unable to read records ")
+		log.Fatal("Unable to read records ", err)
 	}
 
 	recordsLength := len(records)
 
 	for i := 1; i < recordsLength; i++ {
 
-		deliveryId, err := strconv.ParseInt(records[i][0], 10, 64)
+		// Trim whitespaces from each field before parsing
+		deliveryId, err := strconv.ParseInt(strings.TrimSpace(records[i][0]), 10, 64)
 		if err != nil {
 			log.Fatal("Unable to read deliveryId")
 		}
 
-		latitude, err := strconv.ParseFloat(records[i][1], 64)
+		latitude, err := strconv.ParseFloat(strings.TrimSpace(records[i][1]), 64)
 		if err != nil {
 			log.Fatal("Unable to read latitude")
 		}
 
-		longitude, err := strconv.ParseFloat(records[i][2], 64)
+		longitude, err := strconv.ParseFloat(strings.TrimSpace(records[i][2]), 64)
 		if err != nil {
 			log.Fatal("Unable to read longitude")
 		}
 
-		timestamp, err := strconv.ParseInt(records[i][3], 10, 64)
+		timestamp, err := strconv.ParseInt(strings.TrimSpace(records[i][3]), 10, 64)
 		if err != nil {
 			log.Fatal("Unable to read timestamp")
 		}
@@ -59,7 +61,6 @@ func DataReader(csvFilePath string) []models.Point {
 		}
 
 		points = append(points, point)
-
 	}
 
 	return points

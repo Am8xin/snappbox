@@ -8,10 +8,8 @@ import (
 	"time"
 
 	"snappbox_challenge/models"
-
 	"github.com/umahmood/haversine"
 )
-
 
 func CalculateHaversineDistance(p1 *models.Point, p2 *models.Point) float64 {
 	p1Coordinates := haversine.Coord{Lat: p1.Latitude, Lon: p1.Longitude}
