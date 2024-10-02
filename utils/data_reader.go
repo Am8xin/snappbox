@@ -10,10 +10,9 @@ import (
 	"snappbox_challenge/models"
 )
 
-func ReadData(csvFilePath string, pointsCollection *map[int][]models.Point) []models.Point {
+func ReadData(csvFilePath string, pointsCollection *map[int][]models.Point)  {
 
-	points := []models.Point{}
-
+	
 	f, err := os.Open(csvFilePath)
 	if err != nil {
 		log.Fatal("Unable to read input file ", err)
@@ -62,8 +61,5 @@ func ReadData(csvFilePath string, pointsCollection *map[int][]models.Point) []mo
 
 		(*pointsCollection)[point.DeliveryId] = append((*pointsCollection)[point.DeliveryId], point)
 
-		points = append(points, point)
 	}
-
-	return points
 }
