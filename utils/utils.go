@@ -1,4 +1,4 @@
-package helpers
+package utils
 
 import (
 	"encoding/csv"
@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-
 	"snappbox_challenge/models"
 	"github.com/umahmood/haversine"
 )

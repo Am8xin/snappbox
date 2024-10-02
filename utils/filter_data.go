@@ -1,4 +1,4 @@
-package helpers
+package utils
 
 import (
 	"snappbox_challenge/models"
@@ -14,10 +14,6 @@ func filterEachList(listOfPoints []models.Point, id int, validCollection *map[in
 
 		speed := CalculateSpeed(distance, timeDiff)
 
-		// fmt.Printf("Time: %v\n", current.GetTimeStamp())
-
-		// fmt.Printf("Speed: %.2f id: %d and timestamp: %d\n", speed, current.DeliveryId, current.Timestamp)
-
 		if speed <= 100 {
 			CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp())
 			(*validCollection)[id] = append((*validCollection)[id], current)
@@ -27,20 +23,14 @@ func filterEachList(listOfPoints []models.Point, id int, validCollection *map[in
 
 }
 
-func FilterData(points []models.Point) map[int][]models.Point {
-	collections := make(map[int][]models.Point)
+func FilterData(pointsCollection *map[int][]models.Point) map[int][]models.Point {
 	validCollection := make(map[int][]models.Point)
-
-	// Grouping the points into each id_delivery group
-	for _, point := range points {
-		collections[point.DeliveryId] = append(collections[point.DeliveryId], point)
-	}
 
 	var i int = 0
 
-	doneChans := make([]chan bool, len(collections))
+	doneChans := make([]chan bool, len(*pointsCollection))
 
-	for id, listOfPoints := range collections {
+	for id, listOfPoints := range *pointsCollection {
 
 		doneChans[i] = make(chan bool)
 

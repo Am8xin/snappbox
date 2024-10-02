@@ -1,18 +1,20 @@
 package main
 
 import (
-	"snappbox_challenge/helpers"
+	"snappbox_challenge/models"
 	"snappbox_challenge/utils"
 )
 
 func main() {
 
-	points := utils.DataReader("./sample_data.csv")
+	pointsCollection := make(map[int][]models.Point)
 
-	valids := helpers.FilterData(points)
+	utils.ReadData("./sample_data.csv", &pointsCollection)
 
-	totalFares := helpers.CalculateTotalFare(valids)
+	valids := utils.FilterData(&pointsCollection)
 
-	helpers.WriteToCSV(totalFares)
+	totalFares := utils.CalculateTotalFare(valids)
+
+	utils.WriteToCSV(totalFares)
 
 }

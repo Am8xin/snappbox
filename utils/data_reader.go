@@ -5,12 +5,12 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
+	"strings" // Added to use strings.TrimSpace
 
 	"snappbox_challenge/models"
 )
 
-func DataReader(csvFilePath string) []models.Point {
+func ReadData(csvFilePath string, pointsCollection *map[int][]models.Point) []models.Point {
 
 	points := []models.Point{}
 
@@ -59,6 +59,8 @@ func DataReader(csvFilePath string) []models.Point {
 			Longitude:  longitude,
 			Timestamp:  timestamp,
 		}
+
+		(*pointsCollection)[point.DeliveryId] = append((*pointsCollection)[point.DeliveryId], point)
 
 		points = append(points, point)
 	}
