@@ -21,5 +21,7 @@ func main() {
 	utils.WriteToCSV(totalFares)
 
 	var t2 time.Time = time.Now()
+	fmt.Println(t2.Sub(t).Hours()*3600)
 	fmt.Println(t2.Sub(t).Seconds())
+	fmt.Println(t2.Sub(t).Minutes()*60)
 }

@@ -44,7 +44,7 @@ func CalculateFare(speed float64, prevTimeStamp, currentTimeStamp time.Time) flo
 
 	if currentTimeStamp.Sub(prevTimeStamp).Hours() >= 24 {
 		daysCount := currentTimeStamp.Sub(prevTimeStamp).Hours() / 24
-		total += daysCount * (5*1.30 + 19*0.74)
+		total += daysCount * 20.56 // each day delivery cost is a constant value of (5*1.30 + 19*0.74) which is equal to 20.56
 		prevTimeStamp = prevTimeStamp.AddDate(0, 0, int(daysCount))
 	}
 
