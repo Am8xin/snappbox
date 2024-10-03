@@ -9,6 +9,7 @@ My project has 2 folders(packages) for being clean and structural and a main.go 
 3. Then I filter the dataset based on the conditions that It has been told for removing invalid points and also grouping the valid data by their delivery id.
 4. After that , I calculate the fare of the each delivery based on the timestamp and haversine distance of each point of the delivery by calculating sum of the point to point fare.
 5. And after all , I write the (id_delivery,fare_estimate) pair into a new csv file, if the fare_estimate is valid.
+6. I also test the program with a large datset that it's linked here [dataset](https://drive.google.com/file/d/1iPzzpNHXJ5A-3ASeljK5PGQsdW5Zz-km/view?usp=sharing)
 
 I illustrate my code very explicit in a technical manner in this link [document](https://docs.google.com/document/d/1VaJ88ruZVimUE53IygybEi2LC-oeYLM1K3wUKMGuSMs/edit?usp=sharing) 
 

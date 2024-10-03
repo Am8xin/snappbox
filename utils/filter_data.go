@@ -14,7 +14,7 @@ func filterEachList(listOfPoints []models.Point, id int, validCollection *map[in
 
 		speed := CalculateSpeed(distance, timeDiff)
 
-		if speed <= 100 {
+		if speed <= 100 {		
 			(*validCollection)[id] = append((*validCollection)[id], current)
 		}
 	}
