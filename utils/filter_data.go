@@ -6,6 +6,7 @@ import (
 )
 
 func filterEachList(listOfPoints []models.Point, id int, validCollection map[int][]models.Point, mu *sync.Mutex) {
+	
 	for j := 1; j < len(listOfPoints); j++ {
 		prev := listOfPoints[j-1]
 		current := listOfPoints[j]
@@ -16,7 +17,7 @@ func filterEachList(listOfPoints []models.Point, id int, validCollection map[int
 		speed := CalculateSpeed(distance, timeDiff)
 
 		if speed <= 100 {
-			CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp())
+			// CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp()) // we can do this here but we won't because of clean code
 			mu.Lock()
 			validCollection[id] = append(validCollection[id], current)
 			mu.Unlock()
