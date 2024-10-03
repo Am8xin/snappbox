@@ -1,13 +1,13 @@
-
 package utils
 
 import (
 	"encoding/csv"
 	"log"
 	"os"
+	"snappbox_challenge/models"
 	"strconv"
 	"time"
-	"snappbox_challenge/models"
+
 	"github.com/umahmood/haversine"
 )
 
@@ -44,7 +44,7 @@ func CalculateFare(speed float64, prevTimeStamp, currentTimeStamp time.Time) flo
 
 	if currentTimeStamp.Sub(prevTimeStamp).Hours() >= 24 {
 		daysCount := currentTimeStamp.Sub(prevTimeStamp).Hours() / 24
-		total += daysCount * 20.56 // each day delivery cost is a constant value of (5*1.30 + 19*0.74) which is equal to 20.56
+		total += daysCount * 20.56   // each day delivery cost is a constant value of (5*1.30 + 19*0.74) which is equal to 20.56
 		prevTimeStamp = prevTimeStamp.AddDate(0, 0, int(daysCount))
 	}
 
@@ -79,7 +79,6 @@ func CalculateFare(speed float64, prevTimeStamp, currentTimeStamp time.Time) flo
 
 }
 
-/*
 func WriteToCSV(inputMap map[int]float64) {
 	file, err := os.Create("output.csv")
 	if err != nil {
@@ -90,40 +89,16 @@ func WriteToCSV(inputMap map[int]float64) {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	header := []string{"id_delivery", "fare_estimate"}
-	if err := writer.Write(header); err != nil {
+	if err := writer.Write([]string{"id_delivery", "fare_estimate"}); err != nil {
 		log.Fatalln("Error writing header to CSV:", err)
 	}
 
 	for key, value := range inputMap {
-		record := []string{strconv.FormatInt(int64(key), 10), strconv.FormatFloat(value, 'f', -1, 64)}
-		if err := writer.Write(record); err != nil {
-			log.Fatalln("Error writing record to CSV: ", err)
+		if err := writer.Write([]string{
+			strconv.FormatInt(int64(key), 10),
+			strconv.FormatFloat(value, 'f', -1, 64),
+		}); err != nil {
+			log.Fatalln("Error writing record to CSV:", err)
 		}
 	}
-}
-*/
-
-func WriteToCSV(inputMap map[int]float64) {  
-	file, err := os.Create("output.csv")  
-	if err != nil {  
-		log.Fatal("Failed to create file:", err)  
-	}  
-	defer file.Close()  
-
-	writer := csv.NewWriter(file)  
-	defer writer.Flush()  
-
-	if err := writer.Write([]string{"id_delivery", "fare_estimate"}); err != nil {  
-		log.Fatalln("Error writing header to CSV:", err)  
-	}  
-
-	for key, value := range inputMap {  
-		if err := writer.Write([]string{  
-			strconv.FormatInt(int64(key), 10),  
-			strconv.FormatFloat(value, 'f', -1, 64),  
-		}); err != nil {  
-			log.Fatalln("Error writing record to CSV:", err)  
-		}  
-	}  
 }
