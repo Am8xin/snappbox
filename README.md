@@ -12,6 +12,12 @@ My project has 2 folders(packages) for being clean and structural and a main.go 
 
 I illustrate my code very explicit in a technical manner in this link [document](https://docs.google.com/document/d/1VaJ88ruZVimUE53IygybEi2LC-oeYLM1K3wUKMGuSMs/edit?usp=sharing) 
 
-You can simply run the project by running this command : "go run (directory name)\main.go"
+
+For running this project, first you must run this 2 commands in the directory that you are working on (where you put main.go file) :
+
+1- "go mod init snappbox_challenge"
+2- "go mod tidy"
+
+Then you can simply run the project by running this command : "go run (directory name)\main.go"
 After that , you can see the output data in output.csv
 And don't forget to put your test data in sample_test.csv
