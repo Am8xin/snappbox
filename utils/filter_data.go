@@ -2,11 +2,9 @@ package utils
 
 import (
 	"snappbox_challenge/models"
-	"sync"
 )
 
-func filterEachList(listOfPoints []models.Point, id int, validCollection map[int][]models.Point, mu *sync.Mutex) {
-	
+func filterEachList(listOfPoints []models.Point, id int, validCollection *map[int][]models.Point, doneChan chan bool) {
 	for j := 1; j < len(listOfPoints); j++ {
 		prev := listOfPoints[j-1]
 		current := listOfPoints[j]
@@ -17,29 +15,35 @@ func filterEachList(listOfPoints []models.Point, id int, validCollection map[int
 		speed := CalculateSpeed(distance, timeDiff)
 
 		if speed <= 100 {
-			// CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp()) // we can do this here but we won't because of clean code
-			mu.Lock()
-			validCollection[id] = append(validCollection[id], current)
-			mu.Unlock()
+			CalculateFare(speed, prev.GetTimeStamp(), current.GetTimeStamp())
+			(*validCollection)[id] = append((*validCollection)[id], current)
 		}
 	}
+	doneChan <- true
+
 }
 
 func FilterData(pointsCollection *map[int][]models.Point) map[int][]models.Point {
 	validCollection := make(map[int][]models.Point)
-	var mu sync.Mutex
-	var wg sync.WaitGroup
+
+	var i int = 0
+
+	doneChans := make([]chan bool, len(*pointsCollection))
 
 	for id, listOfPoints := range *pointsCollection {
-		wg.Add(1)
+
+		doneChans[i] = make(chan bool)
+
 		validCollection[id] = append(validCollection[id], listOfPoints[0])
 
-		go func(listOfPoints []models.Point, id int) {
-			defer wg.Done()
-			filterEachList(listOfPoints, id, validCollection, &mu)
-		}(listOfPoints, id)
+		go filterEachList(listOfPoints, id, &validCollection, doneChans[i])
+
+		<-doneChans[i]
+		close(doneChans[i])
+
+		i++
 	}
 
-	wg.Wait()
 	return validCollection
+
 }
